@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// dotnet tool install --global dotnet-ef   - Install dotnet ef
+
+using Microsoft.EntityFrameworkCore;
 
 namespace ADO_NET_03._Database_first;
 
