@@ -5,7 +5,7 @@ namespace ADO_NET_03._DB_First_scaffold;
 
 public partial class Teacher
 {
-    public int Id { get; set; }
+    public int TeacherId { get; set; }
 
     public string FirstName { get; set; } = null!;
 
