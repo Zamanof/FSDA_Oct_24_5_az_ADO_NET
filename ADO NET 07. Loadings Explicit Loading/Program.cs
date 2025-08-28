@@ -1,13 +1,15 @@
-﻿// Read releational datas
-
-// + Eager loading
-// - Explicit loading
-// - Lazy loading
-
+﻿
 using Microsoft.EntityFrameworkCore;
+
+// Read releational datas
+
+// - Eager loading
+// + Explicit loading
+// - Lazy loading
 
 using ApplicationContext db = new();
 #region Add Data
+
 //List<Student> programmingStudents = new List<Student>
 //{
 //    new Student { FirstName = "Ilgar", LastName = "Aliyev", Age = 21 },
@@ -99,36 +101,33 @@ using ApplicationContext db = new();
 //db.SaveChanges();
 #endregion
 
+#region Explicit Loading - Load()
 
-#region Eager loading. Include(), ThenInclude()
-var groups = db.Groups.Include(g => g.Students).ToList();
-///*
-//    SELECT *
-//    FROM Groups AS G
-//    JOIN Students AS S
-//    ON S.GroupId = G.Id
+var group = db.Groups.FirstOrDefault(g => g.Id == 1);
 
-// */
-
-
-foreach (var group in groups)
+if(group is not null)
 {
-    Console.WriteLine(group);
-    foreach (var student in group.Students)
-    {
-        Console.WriteLine($"    {student}");
-    }
+    db.Students.Where(s => s.GroupId == group.Id).Load();
+
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"            {group}");
+    
     Console.WriteLine();
+
+    Console.ForegroundColor = ConsoleColor.White;
+
+   group.Students.ForEach(Console.WriteLine);
+
+}
+else
+{
+    Console.WriteLine("Group not found");
 }
 
-
-var students = db.Students.Include(s => s.Group).ToList();
-
-students.ForEach(s =>
-{
-    Console.WriteLine($"{s} -> {s.Group}");
-});
-
+/*
+SELECT *
+FROM Students
+WHERE GroupId = 1
+*/
 
 #endregion
-

@@ -1,13 +1,11 @@
-﻿// Read releational datas
+﻿// // Read releational datas
 
-// + Eager loading
+// - Eager loading
 // - Explicit loading
-// - Lazy loading
-
-using Microsoft.EntityFrameworkCore;
-
+// + Lazy loading
 using ApplicationContext db = new();
 #region Add Data
+
 //List<Student> programmingStudents = new List<Student>
 //{
 //    new Student { FirstName = "Ilgar", LastName = "Aliyev", Age = 21 },
@@ -99,36 +97,42 @@ using ApplicationContext db = new();
 //db.SaveChanges();
 #endregion
 
+#region Lazy Loading
+/*
+Lazy Loading istifade etmek uchun:
 
-#region Eager loading. Include(), ThenInclude()
-var groups = db.Groups.Include(g => g.Students).ToList();
-///*
-//    SELECT *
-//    FROM Groups AS G
-//    JOIN Students AS S
-//    ON S.GroupId = G.Id
+1. Microsoft.EntityFrameworkCore.Proxies nuget package yuklenmelidir
+2. Konfiqurasiyaya .UseLazyLoadingProxies() eleave edilmelidir
+3. Relation (elaqeler) ile baqli olan property-ler (navigation property ve s) 
+    virtual olmalidir ve toreme uschun achiq olmalidirlar
+4. Modelleri tesvir eden butun class-lar public olmalidir 
+*/
 
-// */
-
+var groups = db.Groups.ToList();
 
 foreach (var group in groups)
 {
     Console.WriteLine(group);
+
     foreach (var student in group.Students)
     {
-        Console.WriteLine($"    {student}");
+        Console.WriteLine($"        {student}");
     }
     Console.WriteLine();
 }
 
 
-var students = db.Students.Include(s => s.Group).ToList();
-
-students.ForEach(s =>
+Console.ReadKey();
+Console.ForegroundColor = ConsoleColor.Red;
+var groups2 = db.Groups.ToList();
+foreach (var group in groups2)
 {
-    Console.WriteLine($"{s} -> {s.Group}");
-});
+    Console.WriteLine(group);
 
-
+    foreach (var student in group.Students)
+    {
+        Console.WriteLine($"        {student}");
+    }
+    Console.WriteLine();
+}
 #endregion
-
