@@ -8,4 +8,5 @@ interface IAuthorRepository
     IEnumerable<Author> GetAuthors();
     void RemoveAuthorById(int id);
     void RemoveAuthorsById(int[] ids);
+    void UpdateAuthor(Author author);
 }

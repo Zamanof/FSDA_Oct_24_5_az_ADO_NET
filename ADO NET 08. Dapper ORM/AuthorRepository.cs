@@ -16,25 +16,30 @@ class AuthorRepository : IAuthorRepository
 
     public Author AddAuthor(Author author)
     {
-        var sqlQuery = 
+        var sqlQuery =
             @"INSERT INTO Author(FirstName, LastName)
               VALUES (@FirstName, @LastName)
               SELECT CAST(SCOPE_IDENTITY() AS int)";
 
-        var id = _db.Query<int>(sqlQuery, 
-            new {
+        var id = _db.Query<int>(sqlQuery,
+            new
+            {
                 @FirstName = author.FirstName,
                 @LastName = author.LastName
             }).FirstOrDefault();
-        
+
         author.Id = id;
-        
+
         return author;
     }
 
     public void AddAuthors(IEnumerable<Author> authors)
     {
-        throw new NotImplementedException();
+        authors.ToList().ForEach(a => AddAuthor(a));
+        //foreach (var author in authors)
+        //{
+        //    AddAuthor(author);
+        //}
     }
 
     public Author GetAuthorById(int id)
@@ -42,7 +47,7 @@ class AuthorRepository : IAuthorRepository
         var sqlQuery = "SELECT * FROM Author WHERE Id=@Id";
         return _db.QueryFirstOrDefault<Author>(sqlQuery, new
         {
-            @Id=id
+            @Id = id
         })!;
     }
 
@@ -60,6 +65,19 @@ class AuthorRepository : IAuthorRepository
 
     public void RemoveAuthorsById(int[] ids)
     {
-        throw new NotImplementedException();
+        foreach (var id in ids)
+        {
+            RemoveAuthorById(id);
+        }
+    }
+
+    public void UpdateAuthor(Author author)
+    {
+        var sqlQuery =
+      @"UPDATE Author
+          SET FirstName = @FirstName, LastName = @LastName
+          WHERE Id = @Id";
+
+        _db.Execute(sqlQuery, author);
     }
 }
